@@ -7,14 +7,18 @@
 
 import UIKit
 protocol PostLikesCollectionViewCellDelegate: AnyObject {
-    func postLikesCollectionViewCellLikeCount(_ cell: PostLikesCollectionViewCell)
+    func postLikesCollectionViewCellDidTapLikeCount(_ cell: PostLikesCollectionViewCell, index: Int)
 }
 class PostLikesCollectionViewCell: UICollectionViewCell {
     
     static let identifer = "PostLikesCollectionViewCell"
     weak var delegate : PostLikesCollectionViewCellDelegate?
+    private var index = 0
+    
+    
     private let label: UILabel = {
        let label = UILabel()
+        label.numberOfLines = 1
         label.isUserInteractionEnabled = true
         return label
     }()
@@ -26,13 +30,16 @@ class PostLikesCollectionViewCell: UICollectionViewCell {
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTapLabel))
         label.addGestureRecognizer(tap)
     }
-    @objc func didTapLabel(){
-        delegate?.postLikesCollectionViewCellLikeCount(self)
-    }
     
     required init?(coder: NSCoder) {
-        fatalError()
+        fatalError("init(coder:) has not been implemented")
     }
+    
+    
+    @objc func didTapLabel() {
+        delegate?.postLikesCollectionViewCellDidTapLikeCount(self, index: index)
+    }
+  
     override func layoutSubviews() {
         super.layoutSubviews()
         label.frame = CGRect(x: 10, y: 0, width: contentView.width - 12, height: contentView.height)
@@ -41,7 +48,8 @@ class PostLikesCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         label.text = nil
     }
-    func configure(with viewModel: PostLikeCollectionViewCellViewModel){
+    func configure(with viewModel: PostLikesCollectionViewCellViewModel, index: Int) {
+        self.index = index
         let users = viewModel.likers
         label.text = "\(users.count) likes"
     }

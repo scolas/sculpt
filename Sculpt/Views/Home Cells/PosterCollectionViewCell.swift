@@ -8,13 +8,14 @@
 import UIKit
 import SDWebImage
 protocol PosterCollectionViewCellDelegate: AnyObject{
-    func posterCollectionViewCellDidTapMore(_ cell: PosterCollectionViewCell)
-    func posterCollectionViewCellDidtapUsername(_ cell: PosterCollectionViewCell)
+    func posterCollectionViewCellDidTapMore(_ cell: PosterCollectionViewCell, index: Int)
+    func posterCollectionViewCellDidTapUsername(_ cell: PosterCollectionViewCell, index: Int)
 }
 
 class PosterCollectionViewCell: UICollectionViewCell {
     static let identifer = "PosterCollectionViewCell"
     weak var delegate: PosterCollectionViewCellDelegate?
+    private var index = 0
     
     private let imageView: UIImageView = {
         let image = UIImageView()
@@ -64,6 +65,7 @@ class PosterCollectionViewCell: UICollectionViewCell {
                                  y: imagePadding,
                                  width: imageSize,
                                  height: imageSize)
+        imageView.layer.cornerRadius = imageSize/2
         
         usernameLabel.sizeToFit()
         usernameLabel.frame = CGRect(
@@ -83,17 +85,17 @@ class PosterCollectionViewCell: UICollectionViewCell {
         usernameLabel.text = nil
         imageView.image = nil
     }
-    func configure(with viewModel: PosterCollectionViewCellViewModel){
-        imageView.sd_setImage(with: viewModel.profilePictureURL, completed: nil)
+    func configure(with viewModel: PosterCollectionViewCellViewModel, index: Int) {
+        self.index = index
         usernameLabel.text = viewModel.username
+        imageView.sd_setImage(with: viewModel.profilePictureURL, completed: nil)
     }
     
-    @objc func didTapMore(){
-        delegate?.posterCollectionViewCellDidTapMore(self)
+    @objc func didTapUsername() {
+        delegate?.posterCollectionViewCellDidTapUsername(self, index: index)
     }
-    
-    @objc func didTapUsername(){
-        //this passes back to controller
-        delegate?.posterCollectionViewCellDidtapUsername(self)
+
+    @objc func didTapMore() {
+        delegate?.posterCollectionViewCellDidTapMore(self, index: index)
     }
 }

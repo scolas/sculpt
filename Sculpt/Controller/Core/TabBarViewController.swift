@@ -15,7 +15,7 @@ class TabBarViewController: UITabBarController {
               let username = UserDefaults.standard.string(forKey: "username") else {
             return
         }
-
+        
         let currentUser = User(
             username: username,
             email: email
@@ -40,7 +40,21 @@ class TabBarViewController: UITabBarController {
         nav3.navigationBar.tintColor = .label
         nav4.navigationBar.tintColor = .label
         nav5.navigationBar.tintColor = .label
-        
+        if #available(iOS 14.0, *) {
+            home.navigationItem.backButtonDisplayMode = .minimal
+            explore.navigationItem.backButtonDisplayMode = .minimal
+            camera.navigationItem.backButtonDisplayMode = .minimal
+            activity.navigationItem.backButtonDisplayMode = .minimal
+            profile.navigationItem.backButtonDisplayMode = .minimal
+        } else {
+            // Fallback on earlier versions
+            nav1.navigationItem.backButtonTitle = ""
+            nav2.navigationItem.backButtonTitle = ""
+            nav3.navigationItem.backButtonTitle = ""
+            nav4.navigationItem.backButtonTitle = ""
+            nav5.navigationItem.backButtonTitle = ""
+            
+        }
         //define tab items
         nav1.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 1)
         nav2.tabBarItem = UITabBarItem(title: "Explore", image: UIImage(systemName: "safari"), tag: 2)

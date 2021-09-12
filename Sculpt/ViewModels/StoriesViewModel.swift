@@ -2,7 +2,7 @@
 //  StoriesViewModel.swift
 //  Instagram
 //
-//  Created by Afraz Siddiqui on 3/25/21.
+// 
 //
 
 import Foundation

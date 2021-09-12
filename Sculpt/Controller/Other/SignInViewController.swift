@@ -15,6 +15,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     private let emailField: IGTextField = {
         let field = IGTextField()
         field.placeholder = "Email address"
+        //field.text = "scott@scott.com"
         field.keyboardType = .emailAddress
         field.returnKeyType = .next
         field.autocorrectionType = .no
@@ -25,6 +26,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     private let passwordField: IGTextField = {
         let field = IGTextField()
         field.placeholder = "Passowrd"
+        //field.text = "saloc1993"
         field.isSecureTextEntry = true
         field.keyboardType = .default
         field.returnKeyType = .continue
@@ -77,7 +79,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         emailField.delegate = self
         passwordField.delegate = self
         addButtonActions()
-        
+        didTapSignIn()
      
     }
     
@@ -124,6 +126,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     @objc func didTapSignIn(){
         emailField.resignFirstResponder()
         passwordField.resignFirstResponder()
+        
         guard let email = emailField.text,
               let password = passwordField.text,
               !email.trimmingCharacters(in: .whitespaces).isEmpty,
@@ -133,22 +136,27 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         }
         
         // Sign in with authManager
-        AuthManager.shared.singIn(email: email, password: password) { [weak self] (result) in
+        AuthManager.shared.signIn(email: email, password: password) { [weak self] result in
             DispatchQueue.main.async {
-                switch result{
+                switch result {
                 case .success:
+                    HapticManager.shared.vibrate(for: .success)
                     let vc = TabBarViewController()
                     vc.modalPresentationStyle = .fullScreen
-                    self?.present(vc,
-                                  animated: true,
-                                  completion: nil)
-                    
+                    self?.present(
+                        vc,
+                        animated: true,
+                        completion: nil
+                    )
+
                 case .failure(let error):
+                    HapticManager.shared.vibrate(for: .error)
                     print(error)
                 }
             }
         }
     }
+    
     @objc func didTapTerms(){
         guard let url = URL(string: "scottcolas.com") else {
             return
@@ -160,6 +168,8 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         guard let url = URL(string: "scottcolas.com") else{
             return
         }
+        let vc = SFSafariViewController(url: url)
+        present(vc, animated: true)
     }
     @objc func didTapCreateAccount(){
         let vc = SignUpViewController()

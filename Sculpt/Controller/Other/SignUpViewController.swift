@@ -184,10 +184,11 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
               let password = passwordField.text,
               !email.trimmingCharacters(in: .whitespaces).isEmpty,
               !password.trimmingCharacters(in: .whitespaces).isEmpty,
+              !username.trimmingCharacters(in: .whitespaces).isEmpty,
               password.count >= 6,
               username.count >= 2,
               username.trimmingCharacters(in: .alphanumerics).isEmpty else {
-            
+            presentError()
             //sign in & up vid 2 18:24
            
             return
@@ -197,7 +198,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
         // Sign in with authManager
         AuthManager.shared.singUp(
-            email: email,
+          email: email,
           username: username,
           Password: password,
           profilePicture: data
@@ -205,13 +206,15 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
             DispatchQueue.main.async {
                 switch result {
                 case .success(let user):
+                    HapticManager.shared.vibrate(for: .success)
                     UserDefaults.standard.setValue(user.email, forKey: "email")
                     UserDefaults.standard.setValue(user.username, forKey: "username")
                     self?.navigationController?.popToRootViewController(animated: true)
                     self?.completion?()
                     break
                 case .failure(let error):
-                    print(error)
+                    HapticManager.shared.vibrate(for: .error)
+                    print("\n\nSign Up Error: \(error)")
                 }
             }
         }
@@ -234,6 +237,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         guard let url = URL(string: "scottcolas.com") else{
             return
         }
+        let vc = SFSafariViewController(url: url)
+        present(vc, animated: true)
     }
 
     

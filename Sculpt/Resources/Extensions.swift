@@ -65,3 +65,28 @@ extension Encodable{
     }
 }
 
+
+//home feed pod video 4 min 14
+
+extension DateFormatter{
+    static let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle  = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }()
+}
+
+extension String{
+    static func date(from date: Date) -> String? {
+        let formatter = DateFormatter.formatter
+        let string = formatter.string(from: date)
+        return string
+    }
+}
+
+extension Notification.Name {
+    /// Notification to inform of new post
+    static let didPostNotification = Notification.Name("didPostNotification")
+}
+

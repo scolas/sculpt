@@ -7,15 +7,15 @@
 
 import UIKit
 protocol ProfileTabCollectionReusableViewDelegate: AnyObject {
-    func didTapGridButtonTab()
+    func didTapGridButtonTab(_ containerView: ProfileTabCollectionReusableView)
     func didTapTaggedButtonTab()
     func didTapCardioButtonTab()
     func didTapWeightButtonTab()
 }
-class Pro: UICollectionReusableView {
+class ProfileTabCollectionReusableView: UIView {
     static let identifier = "ProfileTabCollectionReusableView"
     
-    public weak var delegate: ProfileTabCollectionReusableViewDelegate?
+    weak var delegate: ProfileTabCollectionReusableViewDelegate?
     struct Constants {
         static let padding: CGFloat = 8
     }
@@ -53,7 +53,7 @@ class Pro: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .systemBackground
+        backgroundColor = .red
         addSubview(taggedButton)
         addSubview(gridButton)
         addSubview(cardioButton)
@@ -71,30 +71,27 @@ class Pro: UICollectionReusableView {
         cardioButton.addTarget(self,
                                action: #selector(didTapCardioButton),
                                for: .touchUpInside)
+        
     }
     
-    @objc private func didTapGridButton(){
-        gridButton.tintColor = .systemBlue
-        taggedButton.tintColor = .lightGray
-        cardioButton.tintColor = .lightGray
-        weightsButton.tintColor = .lightGray
-        delegate?.didTapGridButtonTab()
+    @objc func didTapGridButton(){
+        delegate?.didTapGridButtonTab(self)
     }
-    @objc private func didTapTaggedButton(){
+    @objc func didTapTaggedButton(){
         gridButton.tintColor = .lightGray
         taggedButton.tintColor = .systemBlue
         cardioButton.tintColor = .lightGray
         weightsButton.tintColor = .lightGray
         delegate?.didTapTaggedButtonTab()
     }
-    @objc private func didTapCardioButton(){
+    @objc func didTapCardioButton(){
         gridButton.tintColor = .lightGray
         taggedButton.tintColor = .lightGray
         cardioButton.tintColor = .systemBlue
         weightsButton.tintColor = .lightGray
         delegate?.didTapCardioButtonTab()
     }
-    @objc private func didTapWeightButton(){
+    @objc func didTapWeightButton(){
         gridButton.tintColor = .lightGray
         taggedButton.tintColor = .lightGray
         cardioButton.tintColor = .lightGray
@@ -112,21 +109,23 @@ class Pro: UICollectionReusableView {
         let size = height - (Constants.padding*2)
         let gridButtonX = ((width/4)-size)/4
         let nextSize = (width/4)
-        gridButton.frame = CGRect(x: gridButtonX,
+        gridButton.frame = CGRect(x: 1,
                                   y: Constants.padding,
                                   width: size,
                                   height: size)
-        taggedButton.frame = CGRect(x: gridButtonX + nextSize,
+        taggedButton.frame = CGRect(x: gridButton.right + 5,
                                     y: Constants.padding,
                                     width: size,
                                     height: size)
-        cardioButton.frame = CGRect(x:  gridButtonX + nextSize * 2,
+        cardioButton.frame = CGRect(x:  taggedButton.right + 5,
                                     y: Constants.padding,
                                     width: size,
                                     height: size)
-        weightsButton.frame = CGRect(x:  gridButtonX + nextSize * 3 ,
+        weightsButton.frame = CGRect(x:  cardioButton.right + 5 ,
                                     y: Constants.padding,
                                     width: size,
                                     height: size)
     }
+    
+    
 }

@@ -19,4 +19,6 @@ pod 'Firebase/Crashlytics'
 pod 'Firebase/Firestore'
 pod 'Firebase/Storage'
 
+pod 'TTGTagCollectionView'
+
 end

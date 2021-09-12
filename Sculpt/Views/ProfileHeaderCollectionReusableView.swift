@@ -9,9 +9,14 @@ import UIKit
 
 protocol ProfileHeaderCollectionReusableViewDelegate: AnyObject {
     func profileHeaderCollectionReusableViewDidTapProfilePicture(_ header: ProfileHeaderCollectionReusableView)
+    func profileHeaderCollectionReusableViewDidTapSegment(_ header: ProfileHeaderCollectionReusableView, _ segmentedControl: UISegmentedControl )
+    
 }
 
-class ProfileHeaderCollectionReusableView: UICollectionReusableView {
+class ProfileHeaderCollectionReusableView: UICollectionReusableView, UICollectionViewDelegate {
+ 
+
+        
     static let identifier = "ProfileHeaderCollectionReusableView"
 
     private let imageView: UIImageView = {
@@ -27,7 +32,21 @@ class ProfileHeaderCollectionReusableView: UICollectionReusableView {
     weak var delegate: ProfileHeaderCollectionReusableViewDelegate?
 
     public let countContainerView = ProfileHeaderCountView()
+    
+   // public let countContainerView2 = ProfileTabCollectionReusableView()
 
+   /* let tabCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumInteritemSpacing = 3
+        layout.minimumLineSpacing = 0
+        layout.sectionInset = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .brown
+        collectionView.register(ProfileTabCollectionReusableView.self, forCellWithReuseIdentifier: ProfileTabCollectionReusableView.identifier)
+        return collectionView
+    }()*/
+    
     private let bioLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -35,17 +54,51 @@ class ProfileHeaderCollectionReusableView: UICollectionReusableView {
         label.font = .systemFont(ofSize: 18)
         return label
     }()
+    
+    private let segmentedCon: UISegmentedControl = {
+        let items = ["Arms", "chest","Legs","Core"]
+        let seg = UISegmentedControl(items: items)
+        return seg
+    }()
+    
+    func createSegment(){
+        let items = ["Arms", "Chest","legs"]
+        let segmentedControl = UISegmentedControl(items: items)
+        segmentedControl.addTarget(self, action: #selector(didTapSegment(_:)), for: .valueChanged)
+        addSubview(segmentedControl)
+        
+
+        let imageSize: CGFloat = width/3.5
+        segmentedControl.backgroundColor = .blue
+        segmentedControl.frame = CGRect(
+            x: 5,
+            y: bioLabel.bottom+10,
+            width: width,
+            height: imageSize
+        )
+    }
 
     // MARK: - Init
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = .green
         addSubview(countContainerView)
         addSubview(imageView)
         addSubview(bioLabel)
-
+        addSubview(segmentedCon)
+        //addSubview(tabCollectionView)
+        //tabCollectionView.delegate = self
+       // tabCollectionView.dataSource = self
+       // addSubview(countContainerView2)
+        //createSegment()
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTapImage))
         imageView.addGestureRecognizer(tap)
+        
+        
+  
+        segmentedCon.addTarget(self, action: #selector(didTapSeg(_:)), for: .valueChanged)
+        addSubview(segmentedCon)
     }
 
     required init?(coder: NSCoder) {
@@ -55,6 +108,18 @@ class ProfileHeaderCollectionReusableView: UICollectionReusableView {
     @objc func didTapImage() {
         delegate?.profileHeaderCollectionReusableViewDidTapProfilePicture(self)
     }
+    @objc func didTapSeg(_ segmentedControl: UISegmentedControl){
+        delegate?.profileHeaderCollectionReusableViewDidTapSegment(self,segmentedControl)
+    }
+    @objc func didTapSegment(_ segmentedControl: UISegmentedControl){
+        switch segmentedControl.selectedSegmentIndex {
+        case 0:
+            print("case 0")
+        default:
+            print("default")
+        }
+    }
+
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -76,6 +141,20 @@ class ProfileHeaderCollectionReusableView: UICollectionReusableView {
             width: width-10,
             height: bioSize.height+50
         )
+        
+     /*   countContainerView2.frame = CGRect(
+            x: 5,
+            y: bioLabel.bottom+10,
+            width: width,
+            height: imageSize
+        )*/
+        segmentedCon.backgroundColor = .blue
+        segmentedCon.frame = CGRect(
+              x: 5,
+              y: bioLabel.bottom+10,
+              width: width-30,
+              height: imageSize
+          )
     }
 
     override func prepareForReuse() {
@@ -100,5 +179,11 @@ class ProfileHeaderCollectionReusableView: UICollectionReusableView {
             actioonType: viewModel.buttonType
         )
         countContainerView.configure(with: containerViewModel)
+
+        //countContainerView2.configure(with: viewModel)
     }
+    
+    
+
+
 }

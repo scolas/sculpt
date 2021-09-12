@@ -17,9 +17,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
+       /* AuthManager.shared.signOut { errSecSuccess in
+            //
+        }*/
         
+        //TabBarViewController()
+      
         if AuthManager.shared.isSignedIn {
             // signed in UI
+            
             window.rootViewController = TabBarViewController()
         
         }else{

@@ -2,7 +2,7 @@
 //  ProfileHeaderCountView.swift
 //  Instagram
 //
-//  Created by Afraz Siddiqui on 3/23/21.
+//  Created by Scott Colas on 3/23/21.
 //
 
 import UIKit

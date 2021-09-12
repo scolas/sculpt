@@ -6,3 +6,9 @@
 //
 
 import Foundation
+struct BodyPart: Codable {
+    let Arm: String?
+    let Leg: String?
+    let Chest: String?
+    
+}

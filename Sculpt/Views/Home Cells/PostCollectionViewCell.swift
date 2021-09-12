@@ -8,14 +8,14 @@
 import UIKit
 import SDWebImage
 protocol PostCollectionViewCellDelegate: AnyObject{
-    func postCollectionViewCellDidLike(_ cell: PostCollectionViewCell)
+    func postCollectionViewCellDidLike(_ cell: PostCollectionViewCell, index: Int)
     
 }
 
 class PostCollectionViewCell: UICollectionViewCell {
     static let identifer = "PostCollectionViewCell"
     weak var delegate: PostCollectionViewCellDelegate?
-    
+    private var index = 0
     let postImage: UIImageView = {
         let image = UIImageView()
         // fiscaleAspectFill  to fill the scare
@@ -64,7 +64,7 @@ class PostCollectionViewCell: UICollectionViewCell {
             }
         }
         //pass in self? its normal to pass in a reference of caller of delegate function
-        delegate?.postCollectionViewCellDidLike(self)
+        delegate?.postCollectionViewCellDidLike(self, index: index)
     }
     
     required init?(coder: NSCoder) {
@@ -80,7 +80,8 @@ class PostCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         postImage.image = nil
     }
-    func configure(with viewModel: PostCollectionViewCellViewModel){
+    func configure(with viewModel: PostCollectionViewCellViewModel, index: Int) {
+        self.index = index
         postImage.sd_setImage(with: viewModel.postUrl, completed: nil)
     }
 
